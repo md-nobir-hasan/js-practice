@@ -116,3 +116,69 @@ var class_array1 = [];
 					}
 			});
 		});
+
+//=======================================================================================================
+//======================================= Ajax data fetch  ==============================================
+//=======================================================================================================
+$("#product_id").change(function() {
+	ajaxDataFetch(['product_id'],'MoreProduct', "supplier_id", ['created_user', 'updated_user',
+		'deleted_user', 'supplier'
+	],function(response){
+		let count = 0;
+		$.each(response,function(key,item){
+			count += Number(item.quantity);
+		})
+		$('#available_qty').val(count)
+	},null,null,'supplier',null,'shop_name');
+});
+
+//Ajax Data fetch according to  department
+function ajaxDataFetch(collect_data_arr, model, append_element, with_arr,returnFunc=null, stop, old_value = null, belongs_to, has_many = null, coloum='name') {
+let data_arr = {};
+for (selector in collect_data_arr) {
+	data_arr[collect_data_arr[selector]] = $('#' + collect_data_arr[selector]).val();
+}
+$.ajax({
+	url: "{{ route('asset.product_fetch.ajax') }}",
+	method: 'GET',
+	async: false,
+	data: {
+		'arr': data_arr,
+		'model': model,
+		'with_arr': with_arr,
+	},
+	success: function(response) {
+		var option = "<option value='' hidden>Select...</option>";
+	   if(returnFunc){
+		returnFunc(response)
+	   }
+	   if(stop != 'stop'){
+			$.each(response, function(index, value) {
+				if (value[has_many]) {
+					$.each(value[has_many], function(has_index, has_value) {
+						if (has_value[belongs_to]) {
+							option += `<option value="${has_value[belongs_to].id}" ${old_value == has_value[belongs_to].id ? 'selected' : ''}>${has_value[belongs_to][coloum]}</option>`;
+						} else {
+							option += `<option value="${has_value.id}" ${old_value == has_value.id ? 'selected' : ''}>${has_value[coloum]}</option>`;
+						}
+					});
+				}
+				else if(value[belongs_to]){
+					if(value[belongs_to][has_many]){
+						console.log()
+						$.each(value[belongs_to][has_many], function(belongs_index,belongs_value) {
+							option += `<option value="${belongs_value.id}" ${old_value == belongs_value.id ? 'selected' : ''}>${belongs_value[coloum]}</option>`;
+						});
+					} else {
+							option += `<option value="${value[belongs_to].id}" ${old_value == value[belongs_to].id ? 'selected' : ''}>${value[belongs_to][coloum]}</option>`;
+						}
+				}
+				else {
+					option += `<option value="${value.id}" ${old_value == value.id ? 'selected' : ''}>${value[coloum]}</option>`;
+				}
+			});
+			$('#' + append_element).html(option);
+		}
+	}
+});
+}
