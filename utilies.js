@@ -132,7 +132,13 @@ $("#product_id").change(function() {
 	},null,null,'supplier',null,'shop_name');
 });
 
-//Ajax Data fetch according to  department
+//Parameters: It receive 9 parameter but only three parameters are compulsory
+//uses:ajaxDataFetch('MoreProduct',{'product_id':product_id}, ['created_user', 'updated_user','deleted_user', 'supplier','cat','cat.subcat','cat.subcat.product'],function(response){console.log(response);},append_selector,null,'supplier',null,'shop_name');
+//explanation:1.Model name(type = string),2. tables field name and their value(your condition in where clause)(type = object) 3.relationship in with(type = object)
+//4. calback function.you get one parameter which is ajax response 5.a element(select element) where you want to append ajax response,6.old value,if you want to keep data selected when validation error back, 7.belongsTo function name, 8.hasMany function name,
+// 9.colum name which you wanto show in append selector
+//Upcomming: Only one argument instead 9 argument.how?? this argument will be type object.then you pass argument as you need. don't need to pass null for using next argument.
+
 function ajaxDataFetch(collect_data_arr, model, append_element, with_arr,returnFunc=null, stop, old_value = null, belongs_to, has_many = null, coloum='name') {
 let data_arr = {};
 for (selector in collect_data_arr) {
