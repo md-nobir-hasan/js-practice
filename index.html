@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    
-    <script src="salmanvi.js"></script>
-</body>
+    <style>
+      .animate1 {
+        height: 300px;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <div class="animate1"></div>
+    </div>
+    <button id="click_me">Click me</button>
+    <script
+      src="https://code.jquery.com/jquery-3.6.3.min.js"
+      integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+      crossorigin="anonymous"
+    ></script>
+    <script src="animate.js"></script>
+    <script>
+      $(".animate1").on("click", function () {
+        $(this)
+          .animate({ width: 50, left: "50%" }, 1000)
+          .animate({ height: 50, top: 60 })
+          .fadeOut()
+          .fadeIn(400, function () {
+            $(this).animate({ height: 300, width: "100%" }, 1000).hide(100);
+          });
+      });
+      $("#click_me").on("click", function () {
+        $(".animate1").animate(
+          {
+            opacity: 0.25,
+            width: "50%",
+            height: ["toggle", "swing"],
+          },
+          {
+            duration: 1000,
+            specialEasing: {
+              width: "linear",
+              height: "easeOutBounce",
+            },
+          }
+        );
+      });
+    </script>
+  </body>
 </html>
